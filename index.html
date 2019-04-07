@@ -1,0 +1,331 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TOOL GEN CODE TỰ ĐỘNG v1.0</title>
+
+    <!--Sử dụng Bootstrap và Jquery để thao tác với input html-->
+    <link rel="stylesheet" href="css_js/bootstrap.min.css">
+    <script src="css_js/jquery.min.js"></script>
+    <script src="css_js/bootstrap.min.js"></script>
+
+    <!--Sử dụng hightlight.js để format code có màu cho đẹp-->
+    <link rel="stylesheet" href="css_js/vs.min.css">
+    <script src="css_js/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<!--Dùng Bootstrap tạo Panel cho dễ nhìn-->
+<div class="panel panel-default">
+    <div class="panel-heading">TOOL GEN CODE TỰ ĐỘNG v2.0</div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label>Nhập tên màn hình</label>
+            <input id="ScreenName" style="width:100%;" value="Product"/>
+            <label>Lựa chọn component GEN</label>
+            Component <input type="checkbox" name="cbOption" value="1" checked>
+            Service<input type="checkbox" name="cbOption" value="2" checked>
+            Html<input type="checkbox" name="cbOption" value="3" checked>
+            Scss<input type="checkbox" name="cbOption" value="4" checked>
+            Model<input type="checkbox" name="cbOption" value="5" checked>
+            Interface<input type="checkbox" name="cbOption" value="6">
+            Pipe<input type="checkbox" name="cbOption" value="7">
+            Directive<input type="checkbox" name="cbOption" value="8">
+            Module<input type="checkbox" name="cbOption" value="9">
+        </div>
+        <button class="btn btn-primary" onclick="preview()">Xem Trước</button>
+        <button class="btn btn-info" onclick="downloadFile()">Download về</button>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Kết quả sau khi Gen Code</div>
+    <div class="panel-body">
+        <!--Ở đây có dùng highlight.js để hiển thị code gen ra có màu mè cho đẹp và dễ nhìn-->
+        <label>GenCode Component</label>
+        <pre><code class="csharp" id="resultView_Component"></code></pre>
+        <label>GenCode Html</label>
+        <pre><code class="csharp" id="resultView_Html"></code></pre>
+        <label>GenCode SCSS</label>
+        <pre><code class="csharp" id="resultView_Scss"></code></pre>
+        <label>GenCode Service</label>
+        <pre><code class="csharp" id="resultView_Service"></code></pre>
+        <label>GenCode Model</label>
+        <pre><code class="csharp" id="resultView_Model"></code></pre>
+        <label>GenCode Interface</label>
+        <pre><code class="csharp" id="resultView_Interface"></code></pre>
+        <label>GenCode Pipe</label>
+        <pre><code class="csharp" id="resultView_Pipe"></code></pre>
+        <label>GenCode Directive</label>
+        <pre><code class="csharp" id="resultView_Directive"></code></pre>
+        <label>GenCode Module</label>
+        <pre><code class="csharp" id="resultView_Module"></code></pre>
+    </div>
+</div>
+
+<script>
+    var ListField = [];   //Mảng các cột của bảng dùng để Gen Code
+    var Screen = $('#ScreenName').val();  //Tên của màn hình sẽ dùng để Gen Code và tạo ra file
+
+    function generateClassName() {
+        return Screen.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+            return word.toUpperCase();
+        }).replace(/\s+/g, '');
+    }
+
+    function generateElementSelector() {
+        return Screen.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+            return word.toLowerCase();
+        }).replace(/\s+/g, '-');
+    }
+
+    function preview() {
+        getOptions(true, false)
+    }
+
+    function getOptions(isPreview, isDownload) {
+        var checkboxes = document.getElementsByName("cbOption");
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                switch (checkboxes[i].defaultValue) {
+                    case '1':
+                        if (isPreview) {
+                            $("#resultView_Component").text(genFileComponent());
+                        }
+                        if (isDownload) {
+                            download(generateElementSelector() + '.component.ts', genFileComponent());
+                        }
+
+                        break;
+                    case '2':
+                        if (isPreview) {
+                            $("#resultView_Service").text(genFileService());
+                        }
+                        if (isDownload) {
+                            download(generateElementSelector() + '.service.ts', genFileService());
+                        }
+
+                        break;
+                    case '3':
+                        if (isPreview) {
+                            $("#resultView_Html").text(genFileHtml());
+                        }
+                        if (isDownload) {
+                            download(generateElementSelector() + '.component.html', genFileHtml());
+                        }
+                        break;
+                    case '4':
+                        if (isPreview) {
+                            $("#resultView_Scss").text(genFileScss());
+                        }
+                        if (isDownload) {
+                            download(generateElementSelector() + '.component.scss', genFileScss());
+                        }
+                        break;
+                    case '5':
+                        if (isPreview) {
+                            $("#resultView_Model").text(genFileModel());
+                        }
+                        if (isDownload) {
+                            download(generateElementSelector() + '.ts', genFileModel());
+                        }
+
+                        break;
+                    case '6':
+                        if (isPreview) {
+                            $("#resultView_Interface").text(genInterface());
+                        }
+                        if (isDownload) {
+                            download(generateElementSelector() + '.ts', genInterface());
+                        }
+                        break;
+                    case '7':
+                        if (isPreview) {
+                            $("#resultView_Pipe").text(genFilePipe());
+                        }
+                        if (isDownload) {
+                            download(generateElementSelector() + '.pipe.ts', genFilePipe());
+                        }
+                        break;
+                    case '8':
+                        if (isPreview) {
+                            $("#resultView_Directive").text(genFileDirective());
+                        }
+                        if (isDownload) {
+                            download(generateElementSelector() + '.directive.ts', genFileDirective());
+                        }
+                        break;
+                    case '9':
+                        if (isPreview) {
+                            $("#resultView_Module").text(genModule());
+                        }
+                        if (isDownload) {
+                            download(generateElementSelector() + '.module.ts', genModule());
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                setTimeout(() => {
+                }, 1000);
+            }
+        }
+
+        if (isPreview) {
+            /*---Hiển thị màu của các đoạn code đã lấy được---*/
+            $('pre code').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+        }
+    }
+
+    function genFileHtml() {
+        var str_html = `<div>Screen</div>`;
+
+        return str_html;
+    }
+
+    function genFileComponent() {
+        var str_component = 'import { Component, OnInit } from \'@angular/core\';\n' +
+            '\n' +
+            '@Component({\n' +
+            '  selector: \'app-' + generateElementSelector() + '\',\n' +
+            '  templateUrl: \'./' + generateElementSelector() + '.component.html\',\n' +
+            '  styleUrls: [\'./' + generateElementSelector() + '.component.css\']\n' +
+            '})\n' +
+            'export class ' + generateClassName() + 'Component implements OnInit {\n' +
+            '\n' +
+            '  constructor() { }\n' +
+            '\n' +
+            '  ngOnInit() {\n' +
+            '  }\n' +
+            '\n' +
+            '}\n';
+
+        return str_component;
+    }
+
+    function genFileScss() {
+        var str_scss = '/*scss screen*/';
+
+        return str_scss;
+    }
+
+    function genFileService() {
+        var str_service = 'import { Injectable } from \'@angular/core\';\n' +
+            '\n' +
+            '@Injectable({\n' +
+            '  providedIn: \'root\'\n' +
+            '})\n' +
+            'export class ' + generateClassName() + 'Service {\n' +
+            '\n' +
+            '  constructor() { }\n' +
+            '}\n';
+
+        return str_service;
+    }
+
+    function genFileModel() {
+        var str_model = '// Model ' + Screen + '.\n' +
+            'export class ' + generateClassName() + ' {\n' +
+            '}\n';
+        return str_model;
+    }
+
+    function genFileDirective() {
+        var str_directive = 'import { Directive } from \'@angular/core\';\n' +
+            '\n' +
+            '@Directive({\n' +
+            '  selector: \'[app' + generateClassName() + ']\'\n' +
+            '})\n' +
+            'export class ' + generateClassName() + 'Directive {\n' +
+            '\n' +
+            '  constructor() { }\n' +
+            '\n' +
+            '}\n';
+        return str_directive;
+    }
+
+    function genFilePipe() {
+        var str_pipe = 'import { Pipe, PipeTransform } from \'@angular/core\';\n' +
+            '\n' +
+            '@Pipe({\n' +
+            '  name: \'' + generateElementSelector() + '\'\n' +
+            '})\n' +
+            'export class ' + generateClassName() + 'Pipe implements PipeTransform {\n' +
+            '\n' +
+            '  transform(value: any, args?: any): any {\n' +
+            '    return null;\n' +
+            '  }\n' +
+            '\n' +
+            '}\n';
+        return str_pipe;
+    }
+
+    function genInterface() {
+        var str_interface = 'export interface ' + generateClassName() + ' {\n' +
+            '}\n';
+        return str_interface;
+    }
+
+    function genModule() {
+        var str_module = 'import { NgModule } from \'@angular/core\';\n' +
+            'import { CommonModule } from \'@angular/common\';\n' +
+            '\n' +
+            '@NgModule({\n' +
+            '  declarations: [],\n' +
+            '  imports: [\n' +
+            '    CommonModule\n' +
+            '  ]\n' +
+            '})\n' +
+            'export class ' + generateClassName() + 'Module { }\n';
+        return str_module;
+    }
+
+    function downloadFile() {
+        getOptions(true, true);
+    }
+
+    // TODO: co the phat trien
+    function DownloadAll() {
+        /*-- Preview trước khi download (phòng trường hợp click download mà chưa preview) --*/
+        Preview();
+        /*-- Dùng hàm setTimeout() để lần lượt tạo file và download về, nếu không các file sẽ bị trùng tên, đè lên nhau --*/
+        setTimeout(() => {
+            download(generateElementSelector() + '.component.ts', genFileComponent());  //Chỗ này ta tạo 1 file có đuôi là ".ts"
+        }, 1000);
+        setTimeout(() => {
+            download(generateElementSelector() + '.component.html', genFileHtml());
+        }, 2000);
+        setTimeout(() => {
+            download('I' + Screen + 'Repository.cs', GenCode_Interface());
+        }, 3000);
+        setTimeout(() => {
+            download('Index.cshtml', GenCode_View_Index());    //Chỗ này ta tạo 1 file có đuôi là ".cshtml".
+        }, 4000);
+        setTimeout(() => {
+            download('Detail.cshtml', GenCode_View_Detail());
+        }, 5000);
+    }
+
+    /*-- Hàm thực thi việc tạo file (có đuôi file luôn) và download file về từ trình duyệt --*/
+    function download(filename, content) {
+        var link = document.createElement('a');
+        link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+        link.setAttribute('download', filename);
+
+        if (document.createEvent) {
+            var event = document.createEvent('MouseEvents');
+            event.initEvent('click', true, true);
+            link.dispatchEvent(event);
+        } else {
+            link.click();
+        }
+    }
+</script>
+</body>
+</html>
