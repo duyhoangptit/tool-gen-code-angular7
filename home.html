@@ -26,16 +26,16 @@
         <div class="form-group">
             <label>Nhập tên màn hình</label>
             <input id="ScreenName" style="width:100%;"/>
-            <label>Lựa chọn component GEN</label>
+            <label>ng g c|s|m|p|d screen_name</label>
             Component <input type="checkbox" name="cbOption" value="1" checked>
-            Service<input type="checkbox" name="cbOption" value="2" checked>
-            Html<input type="checkbox" name="cbOption" value="3" checked>
-            Scss<input type="checkbox" name="cbOption" value="4" checked>
-            Model<input type="checkbox" name="cbOption" value="5" checked>
-            Interface<input type="checkbox" name="cbOption" value="6">
-            Pipe<input type="checkbox" name="cbOption" value="7">
-            Directive<input type="checkbox" name="cbOption" value="8">
-            Module<input type="checkbox" name="cbOption" value="9">
+            Service <input type="checkbox" name="cbOption" value="2" checked>
+            Html <input type="checkbox" name="cbOption" value="3" checked>
+            Scss <input type="checkbox" name="cbOption" value="4" checked>
+            Model <input type="checkbox" name="cbOption" value="5" checked>
+            Interface <input type="checkbox" name="cbOption" value="6">
+            Pipe <input type="checkbox" name="cbOption" value="7">
+            Directive <input type="checkbox" name="cbOption" value="8">
+            Module <input type="checkbox" name="cbOption" value="9">
         </div>
         <button class="btn btn-primary" onclick="preview()">Xem Trước</button>
         <button class="btn btn-info" onclick="downloadFile()">Download về</button>
@@ -67,16 +67,17 @@
 </div>
 
 <script>
-    var ListField = [];   //Mảng các cột của bảng dùng để Gen Code
-    var Screen = $('#ScreenName').val();  //Tên của màn hình sẽ dùng để Gen Code và tạo ra file
+    var Screen = '';  //Tên của màn hình sẽ dùng để Gen Code và tạo ra file
 
     function generateClassName() {
+        Screen = $('#ScreenName').val();
         return Screen.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
             return word.toUpperCase();
         }).replace(/\s+/g, '');
     }
 
     function generateElementSelector() {
+        Screen = $('#ScreenName').val();
         return Screen.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
             return word.toLowerCase();
         }).replace(/\s+/g, '-');
