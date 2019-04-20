@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TOOL GEN CODE TỰ ĐỘNG v2.0</title>
+
+    <!--Sử dụng Bootstrap và Jquery để thao tác với input html-->
+    <link rel="stylesheet" href="css_js/bootstrap.min.css">
+    <script src="css_js/jquery.min.js"></script>
+    <script src="css_js/bootstrap.min.js"></script>
+
+    <!--Sử dụng hightlight.js để format code có màu cho đẹp-->
+    <link rel="stylesheet" href="css_js/vs.min.css">
+</head>
+<body>
+<div class="form-group">
+    <label for="response">Mã response:</label>
+    <textarea class="form-control" rows="10" id="response"></textarea>
+    <button class="btn btn-primary" onclick="download()">Download</button>
+</div>
+<div>
+    Custom tool generate: (<a href="https://www.facebook.com/hoangptit94">Facebook HoangTD5</a>)
+</div>
+<script>
+    function _base64ToArrayBuffer(base64) {
+        let binary_string = window.atob(base64);
+        let len = binary_string.length;
+        let bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binary_string.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
+    function download() {
+        const data = $('#response').val();
+        let newData = _base64ToArrayBuffer(data);
+        const myBlob = new Blob(
+            [newData as BlobPart],
+            {type: 'application/vnd.ms-excel;charset=UTF-8'}
+        );
+        let fileName = new Date().getMilliseconds() + '.xls';
+        let blobURL = URL.createObjectURL(myBlob);
+        let anchor = document.createElement("a");
+        anchor.href = blobURL;
+        anchor.download = fileName;
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+    }
+</script>
+</body>
+</html>

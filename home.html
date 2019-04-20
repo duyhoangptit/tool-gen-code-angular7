@@ -19,6 +19,7 @@
 </head>
 
 <body>
+<a href="parse-data-to-file-excel.html">Tool gen file excel by data response base64</a>
 <!--Dùng Bootstrap tạo Panel cho dễ nhìn-->
 <div class="panel panel-default">
     <div class="panel-heading">TOOL GEN CODE TỰ ĐỘNG v2.0</div>
@@ -67,7 +68,7 @@
 </div>
 <div>
     Custom tool generate: (<a href="https://www.facebook.com/hoangptit94">Facebook HoangTD5</a>)
-</div>.
+</div>
 <script>
     var Screen = '';  //Tên của màn hình sẽ dùng để Gen Code và tạo ra file
 
@@ -328,6 +329,33 @@
         } else {
             link.click();
         }
+    }
+
+    // Tool parse file excel
+    function _base64ToArrayBuffer(base64) {
+        let binary_string = window.atob(base64);
+        let len = binary_string.length;
+        let bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binary_string.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
+    function newBlob(data) {
+
+        let newData = _base64ToArrayBuffer(data);
+        const myBlob = new Blob(
+            [newData as BlobPart],
+            { type: 'application/vnd.ms-excel;charset=UTF-8' }
+        );
+        let blobURL = URL.createObjectURL(myBlob);
+        let anchor = document.createElement("a");
+        anchor.href = blobURL;
+        anchor.download = 'detail_serial_stock_trans.xls'
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
     }
 </script>
 </body>
