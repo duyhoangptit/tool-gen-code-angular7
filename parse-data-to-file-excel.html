@@ -17,7 +17,7 @@
 <div class="form-group">
     <label for="response">Mã response:</label>
     <textarea class="form-control" rows="10" id="response"></textarea>
-    <button class="btn btn-primary" onclick="download()">Download</button>
+    <button class="btn btn-info" onclick="downloadFile();">Download</button>
 </div>
 <div>
     Custom tool generate: (<a href="https://www.facebook.com/hoangptit94">Facebook HoangTD5</a>)
@@ -33,11 +33,11 @@
         return bytes.buffer;
     }
 
-    function download() {
+    function downloadFile() {
         const data = $('#response').val();
         let newData = _base64ToArrayBuffer(data);
         const myBlob = new Blob(
-            [newData as BlobPart],
+            [newData],
             {type: 'application/vnd.ms-excel;charset=UTF-8'}
         );
         let fileName = new Date().getMilliseconds() + '.xls';

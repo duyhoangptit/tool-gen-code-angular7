@@ -330,33 +330,6 @@
             link.click();
         }
     }
-
-    // Tool parse file excel
-    function _base64ToArrayBuffer(base64) {
-        let binary_string = window.atob(base64);
-        let len = binary_string.length;
-        let bytes = new Uint8Array(len);
-        for (let i = 0; i < len; i++) {
-            bytes[i] = binary_string.charCodeAt(i);
-        }
-        return bytes.buffer;
-    }
-
-    function newBlob(data) {
-
-        let newData = _base64ToArrayBuffer(data);
-        const myBlob = new Blob(
-            [newData as BlobPart],
-            { type: 'application/vnd.ms-excel;charset=UTF-8' }
-        );
-        let blobURL = URL.createObjectURL(myBlob);
-        let anchor = document.createElement("a");
-        anchor.href = blobURL;
-        anchor.download = 'detail_serial_stock_trans.xls'
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-    }
 </script>
 </body>
 </html>
